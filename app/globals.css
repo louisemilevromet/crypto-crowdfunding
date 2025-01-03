@@ -115,3 +115,36 @@ body {
     @apply bg-[#2B2BFF] text-white px-4 py-2 rounded hover:bg-opacity-90 transition-colors;
   }
 }
+
+[data-rk] * {
+  font-family: "neue Fallback" !important;
+}
+
+/* [data-rk] .iekbcc0 svg {
+  display: none !important;
+} */
+
+[data-rk] .ju367v9i {
+  background-color: black !important;
+}
+
+[data-rk] .ju367vn {
+  border-radius: 9999px !important;
+}
+
+[data-rk] .ju367vei {
+  box-shadow: none !important;
+}
+
+[data-rk] .ju367va3 {
+  background: black !important;
+  color: white !important;
+}
+
+[data-rk] .ju367vcl {
+  border: none !important;
+}
+
+[data-rk] .ju367va9 {
+  background: none !important;
+}

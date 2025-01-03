@@ -1,6 +1,5 @@
 import "./globals.css";
 import localFont from "next/font/local";
-import { ThemeProvider } from "next-themes";
 import { CrowdFundingProvider } from "@/contexts/CrowdFundingProvider";
 const neue = localFont({
   src: [
@@ -41,7 +40,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <CrowdFundingProvider>
-        <body className={neue.className}>{children}</body>
+        <body data-rk className={neue.className}>
+          {children}
+        </body>
       </CrowdFundingProvider>
     </html>
   );

@@ -6,10 +6,16 @@ import { ethers, BrowserProvider } from "ethers";
 import { CrowdFundingAddress, CrowdFundingABI } from "./contant";
 import { CrowdFundingContext, Donation } from "./CrowdFundingContext";
 import { Campaign } from "@/types";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { config } from "@/config/rainbowkitConfig";
+import { WagmiProvider } from "wagmi";
+import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 
 interface Props {
   children: ReactNode;
 }
+
+const queryClient = new QueryClient();
 
 const fetchContract = (signerOrProvider: ethers.Signer | ethers.Provider) =>
   new ethers.Contract(CrowdFundingAddress, CrowdFundingABI, signerOrProvider);
@@ -80,13 +86,13 @@ export const CrowdFundingProvider = ({ children }: Props) => {
         })
       );
 
-      // Sort campaigns : non funded first, then by deadline
+      // Trier les campagnes : non financées d'abord, puis par date limite
       return formattedCampaigns.sort((a: Campaign, b: Campaign) => {
-        // If one is funded and the other is not, put the non-funded first
+        // Si l'une est financée et l'autre non, mettre la non financée en premier
         if (a.isFullyFunded && !b.isFullyFunded) return 1;
         if (!a.isFullyFunded && b.isFullyFunded) return -1;
-        // If both have the same funding status, sort by deadline
-        return Number(a.deadline) - Number(b.deadline);
+        // Si les deux ont le même statut de financement, trier par date limite
+        return a.deadline - b.deadline;
       });
     } catch (error) {
       throw error;
@@ -131,7 +137,7 @@ export const CrowdFundingProvider = ({ children }: Props) => {
       return formattedCampaigns.sort((a: Campaign, b: Campaign) => {
         if (a.isFullyFunded && !b.isFullyFunded) return 1;
         if (!a.isFullyFunded && b.isFullyFunded) return -1;
-        return Number(a.deadline) - Number(b.deadline);
+        return a.deadline - b.deadline;
       });
     } catch (error) {
       console.error("Error getting user campaigns:", error);
@@ -219,19 +225,25 @@ export const CrowdFundingProvider = ({ children }: Props) => {
   }, []);
 
   return (
-    <CrowdFundingContext.Provider
-      value={{
-        titleData,
-        currentAccount,
-        createCampaign,
-        getCampaigns,
-        getUserCampaigns,
-        donate,
-        getDonations,
-        connectWallet,
-      }}
-    >
-      {children}
-    </CrowdFundingContext.Provider>
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        <RainbowKitProvider locale="en-US">
+          <CrowdFundingContext.Provider
+            value={{
+              titleData,
+              currentAccount,
+              createCampaign,
+              getCampaigns,
+              getUserCampaigns,
+              donate,
+              getDonations,
+              connectWallet,
+            }}
+          >
+            {children}
+          </CrowdFundingContext.Provider>
+        </RainbowKitProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
   );
 };
