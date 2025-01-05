@@ -13,6 +13,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
 
 export default function CrowdFundingCard() {
   const { createCampaign } = useContext(CrowdFundingContext);
@@ -23,6 +31,7 @@ export default function CrowdFundingCard() {
     deadline: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [date, setDate] = useState<Date>();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,8 +46,6 @@ export default function CrowdFundingCard() {
     }
   };
 
-  console.log(isLoading);
-
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -51,9 +58,8 @@ export default function CrowdFundingCard() {
           <div className="flex flex-col items-center justify-center h-[400px] gap-4">
             <div className="loader" />
             <p className="text-lg font-medium text-center">
-              Creating your campaign: Please approve the transaction in your
-              wallet and wait for it to be confirmed. This process may take a
-              few seconds.
+              After the transaction is confirmed, the campaign will be created,
+              this may take a few seconds.
             </p>
           </div>
         ) : (
@@ -149,16 +155,40 @@ export default function CrowdFundingCard() {
 
                 <div className="space-y-2">
                   <Label htmlFor="deadline">Deadline</Label>
-                  <Input
-                    id="deadline"
-                    type="date"
-                    min={new Date().toISOString().split("T")[0]}
-                    value={formData.deadline}
-                    onChange={(e) =>
-                      setFormData({ ...formData, deadline: e.target.value })
-                    }
-                    required
-                  />
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant={"outline"}
+                        className={`w-full justify-start text-left font-normal ${
+                          !date && "text-muted-foreground"
+                        }`}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {date ? (
+                          format(date, "PPP")
+                        ) : (
+                          <span>Choose a date</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={date}
+                        onSelect={(newDate) => {
+                          setDate(newDate);
+                          setFormData({
+                            ...formData,
+                            deadline: newDate
+                              ? format(newDate, "yyyy-MM-dd")
+                              : "",
+                          });
+                        }}
+                        initialFocus
+                        disabled={(date) => date < new Date()}
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
               </div>
 
@@ -167,14 +197,7 @@ export default function CrowdFundingCard() {
                 className="w-full bg-[#2B2BFF] hover:bg-[#2B2BFF]/90 text-white"
                 disabled={isLoading}
               >
-                {isLoading ? (
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="loader scale-[0.25]" />
-                    <span>Creating...</span>
-                  </div>
-                ) : (
-                  "Create Campaign"
-                )}
+                Create Campaign
               </Button>
             </form>
           </>
