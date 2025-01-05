@@ -28,7 +28,7 @@ const neue = localFont({
 });
 
 export const metadata = {
-  title: "CryptoFund - Invest in the Future of Cryptocurrencies",
+  title: "CryptoFund | Invest in the Future of Cryptocurrencies",
   description:
     "Support innovative blockchain-based projects and help shape the future.",
   icons: {

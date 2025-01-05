@@ -2,7 +2,7 @@ require("@nomicfoundation/hardhat-toolbox");
 require("@nomicfoundation/hardhat-chai-matchers");
 require("dotenv").config();
 
-const { NEXT_PUBLIC_API_URL, PRIVATE_KEY } = process.env;
+const { NEXT_PUBLIC_API_URL } = process.env;
 
 module.exports = {
   defaultNetwork: "sepolia",
@@ -10,7 +10,7 @@ module.exports = {
     hardhat: {},
     sepolia: {
       url: NEXT_PUBLIC_API_URL,
-      accounts: [PRIVATE_KEY],
+      // accounts: [],
     },
   },
   solidity: {
