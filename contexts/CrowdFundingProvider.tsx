@@ -14,6 +14,12 @@ const fetchContract = (signerOrProvider: ethers.Signer | ethers.Provider) =>
   new ethers.Contract(CrowdFundingAddress, CrowdFundingABI, signerOrProvider);
 
 export const CrowdFundingProvider = ({ children }: Props) => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const titleData = "CrowdFunding contract";
   const [currentAccount, setCurrentAccount] = useState<string | null>(null);
   const { address, isConnected, status } = useAccount();

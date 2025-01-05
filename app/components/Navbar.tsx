@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import logo from "@/public/assets/logo.svg";
@@ -9,15 +8,15 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import InfoDialog from "@/app/components/InfoDialog";
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
   return (
     <header className="w-full px-4 lg:px-6 flex items-center justify-between fixed top-0 z-50">
       <div className="max-w-[1082px] w-full mx-auto flex items-center justify-between p-2 border border-border rounded-full mt-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="flex items-center justify-between w-full">
           <Link href="/" className="flex items-center gap-2">
             <Image src={logo} alt="Logo" width={30} height={30} />
-            <span className="text-xl text-foreground hidden sm:block">
-              CryptoFund
+            <span className="text-xl text-foreground">
+              <span className="hidden sm:block">CryptoFund</span>
+              <span className="sm:hidden">CF</span>
             </span>
           </Link>
           <div className="flex items-center gap-4">

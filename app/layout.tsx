@@ -31,6 +31,13 @@ export const metadata = {
   title: "CryptoFund - Invest in the Future of Cryptocurrencies",
   description:
     "Support innovative blockchain-based projects and help shape the future.",
+  icons: {
+    icon: [
+      { url: "/assets/favicon.ico", sizes: "32x32" },
+      { url: "/assets/icon.png", sizes: "192x192" },
+    ],
+    apple: [{ url: "/assets/apple-icon.png", sizes: "180x180" }],
+  },
 };
 
 export default function RootLayout({
