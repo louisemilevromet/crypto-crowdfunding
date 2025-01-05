@@ -73,9 +73,8 @@ export function DonationModal({
           <div className="flex flex-col items-center justify-center h-[400px] gap-4">
             <div className="loader" />
             <p className="text-lg font-medium text-center">
-              Processing your donation: Please approve the transaction in your
-              wallet and wait for it to be confirmed. This process may take a
-              few seconds.
+              After the transaction is confirmed, the donation will be added to
+              the campaign. This may take a few seconds.
             </p>
           </div>
         ) : (
