@@ -2,7 +2,6 @@ import "./globals.css";
 import localFont from "next/font/local";
 import { Web3Provider } from "@/contexts/Web3Provider";
 import { CrowdFundingProvider } from "@/contexts/CrowdFundingProvider";
-import LoadingAnimation from "@/app/components/LoadingAnimation";
 const neue = localFont({
   src: [
     {

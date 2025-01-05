@@ -5,19 +5,25 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import rain from "@/public/assets/bright-rain.png";
 
-export default function Animation({ border }: { border: boolean }) {
+export default function Animation() {
   const svgRef = useRef<SVGSVGElement>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  const borderStyle = border ? "rounded-2xl" : "";
 
   function screenToSVG({ x: screenX, y: screenY }: { x: number; y: number }) {
     const svg = svgRef.current;
     if (!svg) return { x: 0, y: 0 };
-    const p = svg.createSVGPoint();
-    p.x = screenX;
-    p.y = screenY;
-    return p.matrixTransform(svg.getScreenCTM()?.inverse() || new DOMMatrix());
+
+    const rect = svg.getBoundingClientRect();
+
+    const viewBoxWidth = 1512;
+    const viewBoxHeight = 982;
+    const scaleX = viewBoxWidth / rect.width;
+    const scaleY = viewBoxHeight / rect.height;
+
+    return {
+      x: screenX * scaleX,
+      y: screenY * scaleY,
+    };
   }
 
   return (
@@ -27,7 +33,7 @@ export default function Animation({ border }: { border: boolean }) {
         alt="noise"
         layout="fill"
         objectFit="cover"
-        className={`absolute left-0 top-0 mix-blend-overlay opacity-20 ${borderStyle} pointer-events-none z-10`}
+        className={`absolute left-0 top-0 mix-blend-overlay opacity-20 rounded-2xl  pointer-events-none z-10`}
       />
 
       <svg
@@ -43,7 +49,7 @@ export default function Animation({ border }: { border: boolean }) {
         viewBox="0 0 1512 982"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className={`absolute inset-0 w-full h-full ${borderStyle}`}
+        className={`absolute inset-0 w-full h-full rounded-2xl`}
         preserveAspectRatio="xMidYMid slice"
       >
         <g clipPath="url(#clip0_878_1737)">

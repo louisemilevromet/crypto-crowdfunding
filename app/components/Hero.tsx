@@ -10,7 +10,7 @@ export default function Hero() {
       <div className="w-full mx-auto relative max-w-[1082px] h-full flex items-center justify-center">
         <div className="absolute inset-0 z-20 pointer-events-auto">
           <div className="aspect-[16/9] w-full h-full overflow-hidden">
-            <Animation border={true} />
+            <Animation />
           </div>
         </div>
 

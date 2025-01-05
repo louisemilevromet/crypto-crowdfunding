@@ -105,9 +105,9 @@ export default function CrowdFundingCard() {
                     <Input
                       id="amount"
                       type="number"
-                      step="0.01"
-                      min="0"
-                      placeholder="0.00"
+                      step="0.001"
+                      min="0.001"
+                      placeholder="0.001"
                       className="pl-8"
                       value={formData.target}
                       onChange={(e) =>

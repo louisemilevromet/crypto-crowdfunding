@@ -20,6 +20,7 @@ export const CrowdFundingProvider = ({ children }: Props) => {
   const { data: walletClient } = useWalletClient();
   const [provider, setProvider] = useState<ethers.Provider | null>(null);
   const [signer, setSigner] = useState<ethers.Signer | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   // JsonRpcProvider is used to read only
   // BrowserProvider is used to write
@@ -57,8 +58,7 @@ export const CrowdFundingProvider = ({ children }: Props) => {
       const receipt = await transaction.wait();
       return receipt;
     } catch (error) {
-      throw error;
-    } finally {
+      return null;
     }
   };
 
@@ -157,7 +157,7 @@ export const CrowdFundingProvider = ({ children }: Props) => {
       location.reload();
       return campaignData;
     } catch (error) {
-      throw error;
+      throw null;
     }
   };
 
@@ -193,7 +193,7 @@ export const CrowdFundingProvider = ({ children }: Props) => {
       });
       setCurrentAccount(accounts[0]);
     } catch (error) {
-      throw error;
+      throw null;
     }
   };
 
