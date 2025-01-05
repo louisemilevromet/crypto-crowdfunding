@@ -1,21 +1,14 @@
 "use client";
 
 import { useState, useEffect, ReactNode } from "react";
-import Web3Modal from "web3modal";
-import { ethers, BrowserProvider } from "ethers";
+import { ethers } from "ethers";
 import { CrowdFundingAddress, CrowdFundingABI } from "./contant";
 import { CrowdFundingContext, Donation } from "./CrowdFundingContext";
 import { Campaign } from "@/types";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { config } from "@/config/rainbowkitConfig";
-import { WagmiProvider } from "wagmi";
-import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
-
+import { useAccount, useWalletClient } from "wagmi";
 interface Props {
   children: ReactNode;
 }
-
-const queryClient = new QueryClient();
 
 const fetchContract = (signerOrProvider: ethers.Signer | ethers.Provider) =>
   new ethers.Contract(CrowdFundingAddress, CrowdFundingABI, signerOrProvider);
@@ -23,48 +16,57 @@ const fetchContract = (signerOrProvider: ethers.Signer | ethers.Provider) =>
 export const CrowdFundingProvider = ({ children }: Props) => {
   const titleData = "CrowdFunding contract";
   const [currentAccount, setCurrentAccount] = useState<string | null>(null);
-  const [openError, setOpenError] = useState(false);
-  const [error, setError] = useState("");
+  const { address, isConnected, status } = useAccount();
+  const { data: walletClient } = useWalletClient();
+  const [provider, setProvider] = useState<ethers.Provider | null>(null);
+  const [signer, setSigner] = useState<ethers.Signer | null>(null);
 
+  // JsonRpcProvider is used to read only
+  // BrowserProvider is used to write
+
+  // Function to create a campaign
   const createCampaign = async (campaign: {
     title: string;
     description: string;
     target: string;
     deadline: Date;
   }) => {
+    if (!walletClient) {
+      alert("You must connect your wallet to create a campaign.");
+      return;
+    }
+
     try {
       const { title, description, target, deadline } = campaign;
-      const web3Modal = new Web3Modal();
-      const connection = await web3Modal.connect();
-      const provider = new BrowserProvider(connection);
+
+      const provider = new ethers.BrowserProvider(walletClient as any);
       const signer = await provider.getSigner();
       const contract = fetchContract(signer);
 
-      if (!currentAccount) throw new Error("No account connected");
-
       const transaction = await contract.createCampaign(
-        currentAccount,
+        await signer.getAddress(),
         title,
         description,
         ethers.parseUnits(target, 18),
         Math.floor(new Date(deadline).getTime() / 1000),
         {
           gasLimit: 1000000,
-          from: currentAccount,
         }
       );
 
       const receipt = await transaction.wait();
-      console.log("Transaction successful", receipt);
       return receipt;
     } catch (error) {
-      console.error("Error creating campaign:", error);
       throw error;
+    } finally {
     }
   };
 
+  // Function to get all campaigns
   const getCampaigns = async (): Promise<Campaign[]> => {
-    const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
+    const provider = new ethers.JsonRpcProvider(
+      process.env.NEXT_PUBLIC_API_URL as string
+    );
     const contract = fetchContract(provider);
 
     try {
@@ -86,12 +88,12 @@ export const CrowdFundingProvider = ({ children }: Props) => {
         })
       );
 
-      // Trier les campagnes : non financées d'abord, puis par date limite
+      // Sort campaigns: non funded first, then by deadline
       return formattedCampaigns.sort((a: Campaign, b: Campaign) => {
-        // Si l'une est financée et l'autre non, mettre la non financée en premier
+        // If one is funded and the other isn't, put the non-funded one first
         if (a.isFullyFunded && !b.isFullyFunded) return 1;
         if (!a.isFullyFunded && b.isFullyFunded) return -1;
-        // Si les deux ont le même statut de financement, trier par date limite
+        // If both have the same funding status, sort by deadline
         return a.deadline - b.deadline;
       });
     } catch (error) {
@@ -99,21 +101,17 @@ export const CrowdFundingProvider = ({ children }: Props) => {
     }
   };
 
+  // Function to get user campaigns
   const getUserCampaigns = async (): Promise<Campaign[]> => {
     try {
-      const provider = new ethers.JsonRpcProvider();
+      const provider = new ethers.JsonRpcProvider(
+        process.env.NEXT_PUBLIC_API_URL as string
+      );
       const contract = fetchContract(provider);
 
       const allCampaigns = await contract.getCampaigns();
-      const accounts = await window.ethereum.request({
-        method: "eth_accounts",
-      });
 
       const filteredCampaigns = allCampaigns.filter((campaign: any) => {
-        console.log("Comparing:", {
-          campaignOwner: campaign.owner.toLowerCase(),
-          currentAccount: currentAccount?.toLowerCase(),
-        });
         return campaign.owner.toLowerCase() === currentAccount?.toLowerCase();
       });
 
@@ -140,17 +138,15 @@ export const CrowdFundingProvider = ({ children }: Props) => {
         return a.deadline - b.deadline;
       });
     } catch (error) {
-      console.error("Error getting user campaigns:", error);
-      return [];
+      throw error;
     }
   };
 
+  // Function to donate to a campaign
   const donate = async (id: number, amount: string) => {
+    if (!signer) throw new Error("Signer non disponible");
+
     try {
-      const web3Modal = new Web3Modal();
-      const connection = await web3Modal.connect();
-      const provider = new BrowserProvider(connection);
-      const signer = await provider.getSigner();
       const contract = fetchContract(signer);
 
       const campaignData = await contract.donateToCampaign(id, {
@@ -161,13 +157,16 @@ export const CrowdFundingProvider = ({ children }: Props) => {
       location.reload();
       return campaignData;
     } catch (error) {
-      console.error("Error donating:", error);
+      throw error;
     }
   };
 
+  // Function to get donations for a campaign
   const getDonations = async (id: number): Promise<Donation[]> => {
     try {
-      const provider = new ethers.JsonRpcProvider();
+      const provider = new ethers.JsonRpcProvider(
+        process.env.NEXT_PUBLIC_API_URL as string
+      );
       const contract = fetchContract(provider);
 
       const donations = await contract.getDonations(id);
@@ -182,33 +181,11 @@ export const CrowdFundingProvider = ({ children }: Props) => {
 
       return parsedDonations;
     } catch (error) {
-      console.error("Error getting donations:", error);
-      return [];
+      throw error;
     }
   };
 
-  const checkWalletConnected = async () => {
-    try {
-      if (!window.ethereum) {
-        setOpenError(true);
-        setError("Please install Metamask");
-        return;
-      }
-
-      const accounts = await window.ethereum.request({
-        method: "eth_accounts",
-      });
-
-      if (accounts.length) {
-        setCurrentAccount(accounts[0]);
-      } else {
-        console.log("No accounts found");
-      }
-    } catch (error) {
-      console.error("Error checking wallet connection:", error);
-    }
-  };
-
+  // Function to connect wallet
   const connectWallet = async () => {
     try {
       const accounts = await window.ethereum.request({
@@ -216,34 +193,39 @@ export const CrowdFundingProvider = ({ children }: Props) => {
       });
       setCurrentAccount(accounts[0]);
     } catch (error) {
-      console.log("Error connecting wallet:", error);
+      throw error;
     }
   };
 
+  // Check wallet connection on mount
   useEffect(() => {
-    checkWalletConnected();
-  }, []);
+    if (isConnected && address) {
+      setCurrentAccount(address);
+    }
+  }, [isConnected, address, status]);
+
+  useEffect(() => {
+    if (walletClient) {
+      const browserProvider = new ethers.BrowserProvider(walletClient);
+      setProvider(browserProvider);
+      browserProvider.getSigner().then(setSigner);
+    }
+  }, [walletClient]);
 
   return (
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider locale="en-US">
-          <CrowdFundingContext.Provider
-            value={{
-              titleData,
-              currentAccount,
-              createCampaign,
-              getCampaigns,
-              getUserCampaigns,
-              donate,
-              getDonations,
-              connectWallet,
-            }}
-          >
-            {children}
-          </CrowdFundingContext.Provider>
-        </RainbowKitProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
+    <CrowdFundingContext.Provider
+      value={{
+        titleData,
+        currentAccount,
+        createCampaign,
+        getCampaigns,
+        getUserCampaigns,
+        donate,
+        getDonations,
+        connectWallet,
+      }}
+    >
+      {children}
+    </CrowdFundingContext.Provider>
   );
 };
