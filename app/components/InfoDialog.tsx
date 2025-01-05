@@ -39,25 +39,17 @@ export default function InfoDialog() {
           <ol className="list-decimal list-inside space-y-3 sm:space-y-4">
             <li className="flex items-center space-x-2">
               <span className="text-sm sm:text-base flex-grow">
-                Install a wallet (e.g., MetaMask)
+                Install a wallet (e.g. MetaMask)
               </span>
             </li>
             <li className="flex items-center space-x-2">
               <span className="text-sm sm:text-base flex-grow">
-                Add Sepolia network to your wallet, visit{" "}
-                <Link
-                  href="https://docs.alchemy.com/docs/how-to-add-sepolia-to-metamask"
-                  className="text-blue-500 hover:underline"
-                  target="_blank"
-                >
-                  Alchemy
-                </Link>{" "}
-                for help
+                Connect your wallet to my dApp and change the network to Sepolia
               </span>
             </li>
             <li className="flex items-center space-x-2">
               <span className="text-sm sm:text-base flex-grow">
-                Once you have added the Sepolia network to your wallet, go to{" "}
+                Go to{" "}
                 <Link
                   href="https://cloud.google.com/application/web3/faucet/ethereum/sepolia"
                   className="text-blue-500 hover:underline"
@@ -70,12 +62,6 @@ export default function InfoDialog() {
             <li className="flex items-center space-x-2">
               <span className="text-sm sm:text-base flex-grow">
                 Request test ETH from the faucet
-              </span>
-            </li>
-            <li className="flex items-center space-x-2">
-              <span className="text-sm sm:text-base flex-grow">
-                Connect your wallet to my dApp, be sure to be on the Sepolia
-                network
               </span>
             </li>
             <li className="flex items-center space-x-2">
