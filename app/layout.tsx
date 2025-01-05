@@ -41,13 +41,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <Web3Provider>
-        <CrowdFundingProvider>
-          <body data-rk className={neue.className}>
-            {children}
-          </body>
-        </CrowdFundingProvider>
-      </Web3Provider>
+      <body data-rk className={neue.className}>
+        <Web3Provider>
+          <CrowdFundingProvider>{children}</CrowdFundingProvider>
+        </Web3Provider>
+      </body>
     </html>
   );
 }

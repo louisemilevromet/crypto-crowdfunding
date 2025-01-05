@@ -1,16 +1,13 @@
 "use client";
 
-import { useRef } from "react";
-import { useSpring, animated } from "@react-spring/web";
+import { useRef, useState } from "react";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import rain from "@/public/assets/bright-rain.png";
 
 export default function Animation({ border }: { border: boolean }) {
   const svgRef = useRef<SVGSVGElement>(null);
-
-  const [styles, api] = useSpring(() => ({
-    transform: `translate(0px, 0px)`,
-  }));
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const borderStyle = border ? "rounded-2xl" : "";
 
@@ -41,10 +38,7 @@ export default function Animation({ border }: { border: boolean }) {
             x: e.clientX - rect.left,
             y: e.clientY - rect.top,
           });
-          api.start({
-            transform: `translate(${coords.x}px, ${coords.y}px)`,
-            config: { mass: 0.1, tension: 50, friction: 15 },
-          });
+          setMousePosition(coords);
         }}
         viewBox="0 0 1512 982"
         fill="none"
@@ -72,9 +66,19 @@ export default function Animation({ border }: { border: boolean }) {
             />
           </g>
 
-          <animated.g
+          <motion.g
             id="mouse-input"
-            style={{ mixBlendMode: "color-dodge", ...styles }}
+            style={{ mixBlendMode: "color-dodge" }}
+            animate={{
+              x: mousePosition.x,
+              y: mousePosition.y,
+            }}
+            transition={{
+              type: "spring",
+              mass: 0.1,
+              stiffness: 50,
+              damping: 15,
+            }}
             filter="url(#filter2_f_878_1737)"
           >
             <path
@@ -89,7 +93,7 @@ export default function Animation({ border }: { border: boolean }) {
               d="M98.7067 -164.626C43.8658 -288.255 -143.801 -301.321 -235.873 -301.321C-327.946 -301.321 -513.6 -280.817 -519.637 -198.8C-527.184 -96.2787 -414.484 -88.7404 -414.484 128.363C-414.484 345.467 -216.754 206.259 23.2375 206.259C215.231 206.259 153.548 -40.9977 98.7067 -164.626Z"
               fill="#8583FF"
             />
-          </animated.g>
+          </motion.g>
         </g>
         <defs>
           <filter
