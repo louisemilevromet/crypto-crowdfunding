@@ -6,17 +6,17 @@ import Animation from "./Animation";
 
 export default function Hero() {
   return (
-    <section className="w-full mt-24 max-w-[1082px] mx-auto min-h-screen">
-      <div className="w-full mx-auto relative">
+    <section className="w-full mt-24 mb-12 mx-auto h-[calc(100vh-9rem)] px-4 lg:px-6 flex items-center justify-center">
+      <div className="w-full mx-auto relative max-w-[1082px] h-full flex items-center justify-center">
         <div className="absolute inset-0 z-20 pointer-events-auto">
-          <div className="aspect-[16/9] w-full overflow-hidden">
-            <Animation />
+          <div className="aspect-[16/9] w-full h-full overflow-hidden">
+            <Animation border={true} />
           </div>
         </div>
 
-        <div className="relative aspect-[16/9] z-30 pointer-events-none">
+        <div className="relative w-full aspect-[16/9] z-30 pointer-events-none">
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <div className="w-full text-center flex flex-col items-center justify-center gap-4">
+            <div className="w-full p-4 text-center flex flex-col items-center justify-center gap-4">
               <div className="flex flex-col items-center justify-center gap-4">
                 <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none text-white">
                   Empower the Future of Crypto

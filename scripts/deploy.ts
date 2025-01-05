@@ -1,9 +1,7 @@
 require("@nomicfoundation/hardhat-toolbox");
 const hre = require("hardhat");
 
-// This script is used to deploy the CrowdFunding contract on my local blockchain
-
-// Contract address: 0x5FbDB2315678afecb367f032d93F642f64180aa3
+// This script is used to deploy the CrowdFunding contract on any blockchain
 
 async function main() {
   // Create an instance of the CrowdFunding contract

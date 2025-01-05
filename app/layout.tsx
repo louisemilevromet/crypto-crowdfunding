@@ -1,7 +1,8 @@
 import "./globals.css";
 import localFont from "next/font/local";
-import { ThemeProvider } from "next-themes";
+import { Web3Provider } from "@/contexts/Web3Provider";
 import { CrowdFundingProvider } from "@/contexts/CrowdFundingProvider";
+import LoadingAnimation from "@/app/components/LoadingAnimation";
 const neue = localFont({
   src: [
     {
@@ -40,9 +41,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <CrowdFundingProvider>
-        <body className={neue.className}>{children}</body>
-      </CrowdFundingProvider>
+      <Web3Provider>
+        <CrowdFundingProvider>
+          <body data-rk className={neue.className}>
+            {children}
+          </body>
+        </CrowdFundingProvider>
+      </Web3Provider>
     </html>
   );
 }

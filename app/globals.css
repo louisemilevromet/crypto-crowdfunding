@@ -115,3 +115,79 @@ body {
     @apply bg-[#2B2BFF] text-white px-4 py-2 rounded hover:bg-opacity-90 transition-colors;
   }
 }
+
+[data-rk] * {
+  font-family: "neue Fallback" !important;
+}
+
+/* [data-rk] .iekbcc0 svg {
+  display: none !important;
+} */
+
+[data-rk] .ju367v9i {
+  background-color: black !important;
+}
+
+[data-rk] .ju367vn {
+  border-radius: 9999px !important;
+}
+
+[data-rk] .ju367vei {
+  box-shadow: none !important;
+}
+
+[data-rk] .ju367va3 {
+  background: black !important;
+  color: white !important;
+}
+
+[data-rk] .ju367vcl {
+  border: none !important;
+}
+
+[data-rk] .ju367va9 {
+  background: none !important;
+}
+
+/* Loading Animation */
+
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: 100px;
+  aspect-ratio: 1;
+  padding: 10px;
+  box-sizing: border-box;
+  display: grid;
+  background: #fff;
+  filter: blur(5px) contrast(10) hue-rotate(65deg);
+  mix-blend-mode: darken;
+}
+.loader:before,
+.loader:after {
+  content: "";
+  grid-area: 1/1;
+  width: 40px;
+  height: 40px;
+  background: #00d5ff;
+  animation: l7 2s infinite;
+}
+.loader:after {
+  animation-delay: -1s;
+}
+@keyframes l7 {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(100%, 0);
+  }
+  50% {
+    transform: translate(100%, 100%);
+  }
+  75% {
+    transform: translate(0, 100%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}

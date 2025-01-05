@@ -5,12 +5,14 @@ import { useSpring, animated } from "@react-spring/web";
 import Image from "next/image";
 import rain from "@/public/assets/bright-rain.png";
 
-export default function Animation() {
+export default function Animation({ border }: { border: boolean }) {
   const svgRef = useRef<SVGSVGElement>(null);
 
   const [styles, api] = useSpring(() => ({
     transform: `translate(0px, 0px)`,
   }));
+
+  const borderStyle = border ? "rounded-2xl" : "";
 
   function screenToSVG({ x: screenX, y: screenY }: { x: number; y: number }) {
     const svg = svgRef.current;
@@ -28,7 +30,7 @@ export default function Animation() {
         alt="noise"
         layout="fill"
         objectFit="cover"
-        className="absolute left-0 top-0 mix-blend-overlay opacity-20 rounded-2xl pointer-events-none z-10"
+        className={`absolute left-0 top-0 mix-blend-overlay opacity-20 ${borderStyle} pointer-events-none z-10`}
       />
 
       <svg
@@ -47,7 +49,7 @@ export default function Animation() {
         viewBox="0 0 1512 982"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="absolute inset-0 w-full h-full rounded-2xl"
+        className={`absolute inset-0 w-full h-full ${borderStyle}`}
         preserveAspectRatio="xMidYMid slice"
       >
         <g clipPath="url(#clip0_878_1737)">

@@ -33,10 +33,3 @@ export const CrowdFundingContext = createContext<CrowdFundingContextType>({
   getDonations: async () => [],
   connectWallet: async () => {},
 });
-
-// Add this type declaration for window.ethereum
-declare global {
-  interface Window {
-    ethereum: any;
-  }
-}
