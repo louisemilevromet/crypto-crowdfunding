@@ -28,7 +28,7 @@ const neue = localFont({
 });
 
 export const metadata = {
-  title: "CryptoFund | Invest in the Future of Cryptocurrencies",
+  title: "CryptoFund | CrowdFunding",
   description:
     "Support innovative blockchain-based projects and help shape the future.",
   icons: {
@@ -37,6 +37,31 @@ export const metadata = {
       { url: "/assets/icon.png", sizes: "192x192" },
     ],
     apple: [{ url: "/assets/apple-icon.png", sizes: "180x180" }],
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://crypto-crowdfunding-three.vercel.app/",
+    siteName: "CryptoFund | CrowdFunding",
+    title: "CryptoFund | CrowdFunding",
+    description:
+      "Support innovative blockchain-based projects and help shape the future.",
+    images: [
+      {
+        url: "https://crypto-crowdfunding-three.vercel.app/assets/icon.png",
+        width: 192,
+        height: 192,
+        alt: "CryptoFund Logo",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "CryptoFund | CrowdFunding",
+    description:
+      "Support innovative blockchain-based projects and help shape the future.",
+    creator: "@votrecompte",
+    images: ["https://crypto-crowdfunding-three.vercel.app/assets/icon.png"],
   },
 };
 
