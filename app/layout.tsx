@@ -60,7 +60,7 @@ export const metadata = {
     title: "CryptoFund | CrowdFunding",
     description:
       "Support innovative blockchain-based projects and help shape the future.",
-    creator: "@votrecompte",
+    creator: "@LouisVromet",
     images: [
       "https://crypto-crowdfunding-three.vercel.app/assets/twitter-image.png",
     ],
