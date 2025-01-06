@@ -48,10 +48,10 @@ export const metadata = {
       "Support innovative blockchain-based projects and help shape the future.",
     images: [
       {
-        url: "https://crypto-crowdfunding-three.vercel.app/assets/icon.png",
-        width: 192,
-        height: 192,
-        alt: "CryptoFund Logo",
+        url: "https://crypto-crowdfunding-three.vercel.app/assets/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "CryptoFund Preview",
       },
     ],
   },
@@ -61,7 +61,9 @@ export const metadata = {
     description:
       "Support innovative blockchain-based projects and help shape the future.",
     creator: "@votrecompte",
-    images: ["https://crypto-crowdfunding-three.vercel.app/assets/icon.png"],
+    images: [
+      "https://crypto-crowdfunding-three.vercel.app/assets/twitter-image.png",
+    ],
   },
 };
 
