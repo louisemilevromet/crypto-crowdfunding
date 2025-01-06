@@ -38,11 +38,10 @@ export default function CrowdFundingCard() {
     try {
       setIsLoading(true);
       await createCampaign(formData as any);
-      window.location.reload();
     } catch (error) {
-      console.error("Error:", error);
     } finally {
       setIsLoading(false);
+      window.location.reload();
     }
   };
 
@@ -59,7 +58,7 @@ export default function CrowdFundingCard() {
             <div className="loader" />
             <p className="text-lg font-medium text-center">
               After the transaction is confirmed, the campaign will be created,
-              this may take a few seconds.
+              this may take a few minutes depending on the network.
             </p>
           </div>
         ) : (

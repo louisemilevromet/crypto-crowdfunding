@@ -12,13 +12,15 @@ import { DonationModal } from "./DonationModal";
 const Campaigns = () => {
   const { getCampaigns, getUserCampaigns } = useContext(CrowdFundingContext);
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [myCampaigns, setMyCampaigns] = useState<Campaign[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(
     null
   );
-  const [myCampaigns, setMyCampaigns] = useState<Campaign[]>([]);
+  const [visibleCampaigns, setVisibleCampaigns] = useState(4);
+  const [showAllCampaigns, setShowAllCampaigns] = useState(false);
 
   useEffect(() => {
     const fetchCampaigns = async () => {
@@ -26,6 +28,8 @@ const Campaigns = () => {
         setLoading(true);
         const fetchedCampaigns = await getCampaigns();
         setCampaigns(fetchedCampaigns);
+        const fetchedMyCampaigns = await getUserCampaigns();
+        setMyCampaigns(fetchedMyCampaigns);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "Failed to fetch campaigns"
@@ -34,19 +38,18 @@ const Campaigns = () => {
         setLoading(false);
       }
     };
-    const fetchMyCampaigns = async () => {
-      try {
-        const fetchedMyCampaigns = await getUserCampaigns();
-        setMyCampaigns(fetchedMyCampaigns);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Failed to fetch my campaigns"
-        );
-      }
-    };
     fetchCampaigns();
-    fetchMyCampaigns();
   }, [getCampaigns, getUserCampaigns]);
+
+  const toggleCampaignsVisibility = () => {
+    if (showAllCampaigns) {
+      setVisibleCampaigns(4);
+      setShowAllCampaigns(false);
+    } else {
+      setVisibleCampaigns(campaigns.length);
+      setShowAllCampaigns(true);
+    }
+  };
 
   if (loading)
     return (
@@ -85,8 +88,8 @@ const Campaigns = () => {
         <h2 className="text-4xl font-bold mb-12 text-foreground">
           All Campaigns
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2  gap-4">
-          {campaigns.map((campaign) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {campaigns.slice(0, visibleCampaigns).map((campaign) => (
             <Card
               key={campaign.id}
               className="w-full overflow-hidden transition-all duration-300 bg-[#f7f6f6] rounded-xl border border-[#e5e7eb]"
@@ -171,6 +174,16 @@ const Campaigns = () => {
             </Card>
           ))}
         </div>
+        {campaigns.length > 4 && (
+          <div className="mt-8 text-center">
+            <Button
+              onClick={toggleCampaignsVisibility}
+              className="bg-[#2B2BFF] hover:bg-[#2B2BFF]/90 text-white"
+            >
+              {showAllCampaigns ? "See Less" : "See More"}
+            </Button>
+          </div>
+        )}
       </div>
       {selectedCampaign && (
         <DonationModal
@@ -179,8 +192,8 @@ const Campaigns = () => {
           campaign={selectedCampaign}
         />
       )}
-      <div className="max-w-[1082px] mx-auto">
-        <h2 className="text-4xl font-bold mb-12 mt-24 text-foreground">
+      <div className="max-w-[1082px] mx-auto mt-24">
+        <h2 className="text-4xl font-bold mb-12 text-foreground">
           My Campaigns
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -74,7 +74,8 @@ export function DonationModal({
             <div className="loader" />
             <p className="text-lg font-medium text-center">
               After the transaction is confirmed, the donation will be added to
-              the campaign. This may take a few seconds.
+              the campaign. This may take a few minutes depending on the
+              network.
             </p>
           </div>
         ) : (
